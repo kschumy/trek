@@ -9,8 +9,9 @@ const loadTrips = () => {
   axios.get(URL)
     .then((response) => {
       console.log(response['data']);
-      // response['data'].forEach((trip) => {
-        // include message about s
+      response['data'].forEach((trip) => {
+        // include message about successfully loading n number of trips
+        tripsList.append(`<li>${trip.name}</li>`)
       })
     })
     .catch((error) => {
