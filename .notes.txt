@@ -1,0 +1,21 @@
+<!--<section class="new-pet">-->
+				<!--<h1>Add a new pet</h1>-->
+				<!--<form id="pet-form">-->
+					<!--<div>-->
+						<!--<label for="name">Name</label>-->
+						<!--<input type="text" name="name" />-->
+					<!--</div>-->
+
+					<!--<div>-->
+						<!--<label for="age">Age</label>-->
+						<!--<input type="number" name="age" />-->
+					<!--</div>-->
+
+					<!--<div>-->
+						<!--<label for="owner">Owner</label>-->
+						<!--<input type="text" name="owner" />-->
+					<!--</div>-->
+
+					<!--<input type="submit" name="add-pet" value="Add Pet" />-->
+				<!--</form>-->
+			<!--</section>-->
