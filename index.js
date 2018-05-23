@@ -1,27 +1,25 @@
 const inputField = name => $(`#pet-form input[name="${name}"]`); // one line arrow function
 
-const readFormData = () => {
-  const getInput = name => {
-    const input = inputField(name).val();
-    return input ? input : undefined;
-  };
+// const reservationData = () => {
+//   const getInput = name => {
+//     const input = inputField(name).val();
+//     return input ? input : undefined;
+//   };
 
-  const formData = {};
-  FORM_FIELDS.forEach((field) =>{
-    formData[field] = getInput(field);
-  });
-  return formData;
-};
+//   const formData = {};
+//   FORM_FIELDS.forEach((field) =>{
+//     formData[field] = getInput(field);
+//   });
+//   return formData;
+// };
+//
+// const clearForm = () => {
+//   FORM_FIELDS.forEach((field) => {
+//     inputField(field).val('');
+//   });
+// };
 
-const clearForm = () => {
-  FORM_FIELDS.forEach((field) => {
-    inputField(field).val('');
-  });
-};
-
-const POSTURL = ' https://ada-backtrek-api.herokuapp.com/trips';
-
-
+// const POSTURL = ' https://ada-backtrek-api.herokuapp.com/trips';
 
 
 const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
@@ -44,18 +42,66 @@ const loadTrips = () => {
     });
 };
 
+
+
 const getTrip = (tripID) => {
   const tripInfo = $('#trip-info');
   tripInfo.empty();
   axios.get(getTripURL(tripID))
     .then((response) => {
       console.log(response);
-      tripInfo.append(`<p>${response['data']['name']}</p><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`)
+      tripInfo.append(`<p>${response['data']['name']}</p><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+      loadForm(`${response['data']['name']}`);
+      // const tripNameForForm = $('#trip-name-for-form');
+      // tripNameForForm.clear();
+      // tripNameForForm.append(`<p>${response['data']['name']}</p>`);
     })
     .catch((error) => {
       console.log(error)
     });
+
 };
+
+const loadForm =(tripName) => {
+  const formBullshit = $('#trip-name-for-form');
+  formBullshit.empty();
+
+      $(formBullshit).append(tripName);
+
+};
+
+
+// const loadForm =(tripID) => {
+//   const formBullshit = $('#trip-name-for-form');
+//   formBullshit.empty();
+//   axios.get(getTripURL(tripID))
+//     .then((response) => {
+//       console.log(response);
+//
+//       $(formBullshit).append(`<p>${response['data']['name']}</p>`);
+//       console.log("foo");
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     });
+// };
+
+
+// https://ada-backtrek-api.herokuapp.com/trips/1/reservations
+// const loadReservationForm = (tripNameAndId) => {
+//   // const tripNameAndId = $('#trip-info');
+//   // tripInfo.empty();
+//   const tripName = tripNameAndId[0];
+//   const tripid = tripNameAndId[1];
+//   axios.post(getReservationURL(tripID))
+//     .then((response) => {
+//       console.log(response);
+//
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     });
+// };
 
 const createReservation = (event) => {
   // Note that createPet is a handler for a `submit`
@@ -76,7 +122,7 @@ const createReservation = (event) => {
   // make a POST request to the Pets API
   // make sure it's the right endpoint
   // with the right data
-  axios.post(URL, petData)
+  axios.post(URL, reservationData)
     .then((response) => {
       // console.log(response);
       reportStatus(`Successfully added a pet with ID ${response.data.id}!`);
@@ -99,23 +145,34 @@ const createReservation = (event) => {
 };
 
 
-const ampers = () => {
-  axios.post(POSTURL,
-    {'name': 'Ampers are the best', 'continent': 'North America', 'about': 'Literally the best of all times.', 'category': '#1', 'weeks': 42, 'cost': 125.43})
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.log(error.response);
-  });
-};
+// const ampers = () => {
+//   axios.post(POSTURL,
+//     {'name': 'Ampers are the best', 'continent': 'North America', 'about': 'Literally the best of all times.', 'category': '#1', 'weeks': 42, 'cost': 125.43})
+//   .then((response) => {
+//     console.log(response);
+//   })
+//   .catch((error) => {
+//     console.log(error.response);
+//   });
+// };
 
 $(document).ready(() => {
 
   $('#load-trips-button').click(loadTrips);
-  $('#fuck-yeah-ampers-button').click(ampers);
+  // $('#fuck-yeah-ampers-button').click(ampers);
   $('#trips-list').on('click', function(event) {
     getTrip(event.target.classList[1]);
+    // getTrip(event.target.classList[1]);
+    // event.target.classList[1]
+    // loadForm(event.target.classList[1]);
+    // console.log(event.target);
+
+
+    // loadReservationForm(event.target.data.name)
+
   });
+  // $('#trips-list').on('click', function(event) {
+  //   getTrip(event.target.classList[1]);
+  // });
 
 });
