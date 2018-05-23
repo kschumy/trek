@@ -2,29 +2,28 @@
     /*border: black solid 1px;*/
 /*}*/
 .container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: minmax(100px, auto);
-    grid-template-areas:
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-areas:
             "nav nav"
             "list info"
             "list book"
             "list .";
-
 }
 
 .nav {
-    grid-area: nav;
+  grid-area: nav;
 }
 
 #list {
-     grid-area: list;
+  grid-area: list;
  }
 
 #trip-info {
-    grid-area: info;
+  grid-area: info;
 }
 
 #book {
-    grid-area: book;
+  grid-area: book;
 }

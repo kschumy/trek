@@ -1,30 +1,38 @@
-const inputField = name => $(`#pet-form input[name="${name}"]`); // one line arrow function
+const FORM_FIELDS = ['name', 'email'];
+const inputField = name => $(`#reservation-form input[name="${name}"]`);
+// const inputField = $(`.form-name-field input[name]`); // one line arrow function
 
-// const reservationData = () => {
-//   const getInput = name => {
-//     const input = inputField(name).val();
-//     return input ? input : undefined;
-//   };
+const reservationFormData = () => {
+    const getInput = name => {
+      const input = inputField(name).val();
+      return input ? input : undefined;
+    };
 
-//   const formData = {};
-//   FORM_FIELDS.forEach((field) =>{
-//     formData[field] = getInput(field);
-//   });
-//   return formData;
-// };
-//
-// const clearForm = () => {
-//   FORM_FIELDS.forEach((field) => {
-//     inputField(field).val('');
-//   });
-// };
+    const formData = {};
+    FORM_FIELDS.forEach((field) =>{
+      formData[field] = getInput(field);
+    });
+    return formData;
+};
 
-// const POSTURL = ' https://ada-backtrek-api.herokuapp.com/trips';
+
+
+
+
+
+const clearForm = () => {
+  FORM_FIELDS.forEach((field) => {
+    inputField(field).val('');
+  });
+};
+
+
 
 
 const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
 
 const getTripURL = (tripId) => { return `${URL}/${tripId}` };
+const getReservationURL = (tripId) => { return `${URL}/${tripId}/reservations` };
 
 const loadTrips = () => {
   const tripsList = $('#trips-list');
@@ -50,7 +58,7 @@ const getTrip = (tripID) => {
   axios.get(getTripURL(tripID))
     .then((response) => {
       console.log(response);
-      tripInfo.append(`<p>${response['data']['name']}</p><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+      tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
       loadForm(`${response['data']['name']}`);
       // const tripNameForForm = $('#trip-name-for-form');
       // tripNameForForm.clear();
@@ -65,26 +73,9 @@ const getTrip = (tripID) => {
 const loadForm =(tripName) => {
   const formBullshit = $('#trip-name-for-form');
   formBullshit.empty();
-
-      $(formBullshit).append(tripName);
-
+  $(formBullshit).append(tripName);
 };
 
-
-// const loadForm =(tripID) => {
-//   const formBullshit = $('#trip-name-for-form');
-//   formBullshit.empty();
-//   axios.get(getTripURL(tripID))
-//     .then((response) => {
-//       console.log(response);
-//
-//       $(formBullshit).append(`<p>${response['data']['name']}</p>`);
-//       console.log("foo");
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//     });
-// };
 
 
 // https://ada-backtrek-api.herokuapp.com/trips/1/reservations
@@ -107,11 +98,11 @@ const createReservation = (event) => {
   // Note that createPet is a handler for a `submit`
   // event, which means we need to call `preventDefault`
   // to avoid a page reload
+
+
   event.preventDefault();
-  // from the form (aka the stuff on the HTML, figure out what the new pet should look like.
-
-  let reservationData = readReservationData(); // new verson. See below.
-
+  let reservationData = reservationFormData(); // new verson. See below.
+  const reservationURL = getReservationURL($('#trip-info h3')['0'].classList[0]);
   // ORIGINAL VERSION
   // let petData = {};
   // petData['name'] = $(`input[name="name"]`).val();
@@ -122,11 +113,12 @@ const createReservation = (event) => {
   // make a POST request to the Pets API
   // make sure it's the right endpoint
   // with the right data
-  axios.post(URL, reservationData)
+  axios.post(reservationURL, reservationData)
     .then((response) => {
-      // console.log(response);
-      reportStatus(`Successfully added a pet with ID ${response.data.id}!`);
-      clearForm();
+      console.log(response);
+
+      // reportStatus(`Successfully added a reservation with ID ${response.data.id}!`);
+      // clearForm();
     })
     .catch((error) => {
       console.log(error.response);
@@ -136,13 +128,42 @@ const createReservation = (event) => {
           error.response.data.errors
         );
       } else {
-        reportStatus(`Encountered an error: ${error.message}`);
+        // reportStatus(`Encountered an error: ${error.message}`);
       }
     });
 
   // Display any feedback we want to give to the user
   clearForm();
 };
+// const ampers = () => {
+//   axios.post(POSTURL,
+//     {'name': 'Ampers 👏👏', 'continent': 'North America', 'about': '❤️', 'category': '#1', 'weeks': 42, 'cost': 42.42})
+//   .then((response) => {
+//     console.log(response);
+//   })
+//   .catch((error) => {
+//     console.log(error.response);
+//   });
+// };
+
+
+
+$(document).ready(() => {
+
+  $('#load-trips-button').click(loadTrips);
+  $('#trips-list').on('click', function(event) { getTrip(event.target.classList[1]); });
+  $('#reservation-form').on('submit', function(event) {
+    createReservation(event);
+    // event.preventDefault();
+    // // const someshit = $('#trip-info h3');
+    // console.log('foo');
+    // console.log($('#trip-info h3')['0'].classList[0]);
+    // console.log('bar');
+    // getTrip(event.target.classList[1]);
+  });
+  // $('#fuck-yeah-ampers-button').click(ampers);
+
+});
 
 
 // const ampers = () => {
@@ -156,23 +177,4 @@ const createReservation = (event) => {
 //   });
 // };
 
-$(document).ready(() => {
-
-  $('#load-trips-button').click(loadTrips);
-  // $('#fuck-yeah-ampers-button').click(ampers);
-  $('#trips-list').on('click', function(event) {
-    getTrip(event.target.classList[1]);
-    // getTrip(event.target.classList[1]);
-    // event.target.classList[1]
-    // loadForm(event.target.classList[1]);
-    // console.log(event.target);
-
-
-    // loadReservationForm(event.target.data.name)
-
-  });
-  // $('#trips-list').on('click', function(event) {
-  //   getTrip(event.target.classList[1]);
-  // });
-
-});
+// $('#fuck-yeah-ampers-button').click(ampers);
