@@ -19,7 +19,11 @@ const loadTrips = () => {
     });
 };
 
+
 $(document).ready(() => {
   $('#load-trips-button').click(loadTrips);
   // $('#trip-form').submit(createTrip);
 });
+
+// $(document).foundation();
+
