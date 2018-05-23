@@ -8,7 +8,9 @@
     grid-template-areas:
             "nav nav"
             "list info"
-            "list book";
+            "list book"
+            "list .";
+
 }
 
 .nav {
