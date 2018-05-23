@@ -15,14 +15,14 @@
     grid-area: nav;
 }
 
-.list {
+#list {
      grid-area: list;
  }
 
-.info {
+#trip-info {
     grid-area: info;
 }
 
-.book {
+#book {
     grid-area: book;
 }
