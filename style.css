@@ -1,29 +1,89 @@
-/** {*/
-    /*border: black solid 1px;*/
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+html {
+  background: url("https://images.unsplash.com/photo-1487581424120-18f3611a63e6?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=eb87a25dcd5110b903616b765084274a&auto=format&fit=crop&w=2052&q=80") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+
+body::after {
+  filter: blur(13px);
+}
+body {
+  margin-left: 15%;
+  margin-right: 15%;
+
+  background: none;
+  /*background-image: url("https://images.unsplash.com/photo-1496686941088-eaa405ad5fbb?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ac234cc211d17e5c48a1e1800419a691&auto=format&fit=crop&w=975&q=80");*/
+  /*background-repeat: no-repeat;*/
+  /*background-attachment: fixed;*/
+  /*background-position: center top;*/
+
+}
+/*.container {*/
+  /*display: grid;*/
+  /*grid-template-columns: repeat(2, 1fr);*/
+  /*grid-auto-rows: minmax(100px, auto);*/
+  /*grid-template-areas:*/
+            /*"nav nav"*/
+            /*"list info"*/
+            /*"list book"*/
+            /*"list .";*/
 /*}*/
+
 .container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: minmax(100px, auto);
+  /*grid-auto-rows: minmax(50px, 40rem);*/
   grid-template-areas:
-            "nav nav"
-            "list info"
-            "list book"
-            "list .";
+          "nav nav"
+          "list big-info";
 }
 
+
+
 .nav {
+  height: 50px;
+  background-color: white;
   grid-area: nav;
+
 }
 
 #list {
+  max-height: 40rem;
+  border-radius: 3px;
+  /*border-spacing: 3px;*/
+  background-color: white;
   grid-area: list;
  }
-
-#trip-info {
-  grid-area: info;
+#big-info {
+  height: 40rem;
+  grid-area: big-info;
 }
+#trip-info {
+  height: 20rem;
+  grid-area: info;
+  background-color: rgba(0, 0, 0, 0.5);
+  background-color: white;
+
+}
+
+
 
 #book {
-  grid-area: book;
+  height: 20rem;
+  /*grid-area: book;*/
+  background-color: white;
+
 }
+
+/*#list li {*/
+  /*border: black solid;*/
+/*}*/
+

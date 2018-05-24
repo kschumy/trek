@@ -3,28 +3,36 @@
 	<head>
 		<meta charset="utf-8">
 		<title>TREK</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.4.3/dist/css/foundation.min.css" integrity="sha256-GSio8qamaXapM8Fq9JYdGNTvk/dgs+cMLgPeevOYEx0= sha384-wAweiGTn38CY2DSwAaEffed6iMeflc0FMiuptanbN4J+ib+342gKGpvYRWubPd/+ sha512-QHEb6jOC8SaGTmYmGU19u2FhIfeG+t/hSacIWPpDzOp5yygnthL3JwnilM7LM1dOAbJv62R+/FICfsrKUqv4Gg==" crossorigin="anonymous">
+		<!--<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.4.3/dist/js/foundation.min.js" integrity="sha256-mRYlCu5EG+ouD07WxLF8v4ZAZYCA6WrmdIXyn1Bv9Vk= sha384-KzKofw4qqetd3kvuQ5AdapWPqV1ZI+CnfyfEwZQgPk8poOLWaabfgJOfmW7uI+AV sha512-0gHfaMkY+Do568TgjJC2iMAV0dQlY4NqbeZ4pr9lVUTXQzKu8qceyd6wg/3Uql9qA2+3X5NHv3IMb05wb387rA==" crossorigin="anonymous"></script>-->
 		<link rel="stylesheet" href="style.css">
 	</head>
 
 	<body>
-		<section id="status-message"></section>
 
+		<section id="status-message"></section>
 		<main class="container">
+
 			<section class="nav">
-				<button id="load-trips-button">Get All Trips</button>
+				<span><button id="load-trips-button">Get All Trips</button></span>
+
 				<!--<button id="fuck-yeah-ampers-button">Best class</button>-->
 			</section>
 
-			<section id="list" class="all-trips">
+			<section id="list" style="overflow: scroll;" class="all-trips hidden-at-start">
 				<h1>Trips List</h1>
 				<ul id="trips-list"></ul>
 			</section>
 
-			<section id="trip-info">
+			<section id="big-info" class="hidden-at-start side-info">
+			<!--<section id="trip-info" style="overflow: scroll; width: 600px; height: 300px;" class="hidden-at-start side-info">-->
+				<section id="trip-info" style="overflow: scroll;  height: 50%;">
 
-			</section>
+				</section>
 
-			<section id="book">
+				<section id="book">
+
+				<!--<section id="book" class="hidden-at-start side-info">-->
 				<h1>Reserve Trip</h1>
 				<form id="reservation-form">
 					<!--<div class="form-name-field">-->
@@ -37,6 +45,7 @@
 
 					<input type="submit" name="add-pet" value="Add Reservation" />
 				</form>
+			</section>
 			</section>
 
 		</main>
