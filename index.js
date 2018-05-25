@@ -1,5 +1,3 @@
-// use closure with li
-
 const FORM_FIELDS = ['name', 'email'];
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
 const getInput = name => { return inputField(name).val() || undefined };
@@ -32,27 +30,33 @@ const reportError = (message, errors) => {
 const loadTrips = () => {
   const tripsList = $('#trips-list');
   tripsList.empty();
+
   axios.get(URL)
     .then((response) => {
-      // console.log(response['data']);
       response['data'].forEach((trip) => {
+        let tripURL = `${URL}/${trip.id}`;
+        const newDiv = document.createElement('li');
+          $(`this`).on('click', function(tripURL) {
+          );
+
+          }
+        }
         // include message about successfully loading n number of trips
-        tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
+        // tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
       })
     })
     .catch((error) => {
       console.log(error)
     });
 };
-
-const getTrip = (tripID) => {
+const getTrip = (tripURL) => {
   const tripInfo = $('#trip-info');
   tripInfo.empty();
-  axios.get(getTripURL(tripID))
+  axios.get(tripURL)
     .then((response) => {
-      console.log(response['data']);
+      // console.log(response['data']);
       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
-      loadForm(`${response['data']['name']}`);
+      // loadForm(`${response['data']['name']}`);
     })
     .catch((error) => {
       console.log(error)
@@ -60,15 +64,32 @@ const getTrip = (tripID) => {
 
 };
 
-const loadForm =(tripName) => {
-  const formBullshit = $('#trip-name-for-form');
-  formBullshit.empty();
-  $(formBullshit).append(tripName);
-};
+
+// const getTrip = (tripID) => {
+//   const tripInfo = $('#trip-info');
+//   tripInfo.empty();
+//   axios.get(getTripURL(tripID))
+//     .then((response) => {
+//       // console.log(response['data']);
+//       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+//       // loadForm(`${response['data']['name']}`);
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     });
+//
+// };
+
+// const loadForm = (tripName) => {
+//   const formBullshit = $('#trip-name-for-form');
+//   formBullshit.empty();
+//   $(formBullshit).append(tripName);
+// };
 
 const createReservation = (event) => {
   event.preventDefault();
   let reservationData = reservationFormData();
+  // console.log(`#trip-info h3`);
   const reservationURL = getReservationURL($('#trip-info h3')['0'].classList[0]);
 
   axios.post(reservationURL, reservationData)
@@ -94,44 +115,23 @@ const createReservation = (event) => {
 
 $(document).ready(() => {
   $('.hidden-at-start').hide();
-  $('#load-trips-button').on('click', function(event) {
-    $('#list').slideDown('slow')
-    .promise().done(function() {
 
+  $('#load-trips-button').on('click', function(event) {
+    $('#list').slideDown('slow');
+      // .promise().done(function() {
       loadTrips(event);
+    // });
   });
-  });
-  // $('#trips-list').on('mousedown', function(event) {
-  //   $('.side-info').slideUp('slow');
-  // });
 
   $('#trips-list').on('click', function(event) {
     $('.side-info').slideUp('slow')
       .promise().done(function() {
-      getTrip(event.target.classList[1]);
-      // $('.side-info').promise().done(function() {
-      //   $('.side-info').slideToggle('slow');
-      // });
-      $('.side-info').slideDown('slow');
-      // $( "p" ).append( " Finished! " );
+        getTrip(event.target.classList[1]);
+        $('.side-info').slideDown('slow');
     });
-    // $('.side-info').slideUp('slow');
-    // $(this).is(':visible')? toggle_switch.text('Hide') : toggle_switch.text('Show');
-
-      // $('#book').slideToggle();
-      // getTrip(event.target.classList[1]);
-      // // $('.side-info').promise().done(function() {
-      // //   $('.side-info').slideToggle('slow');
-      // // });
-      // $('.side-info').slideDown('slow');
-
   });
 
-
-
-  $('#trip-info').on('scroll', function() {
-    // $().css( "display", "inline" ).fadeOut( "slow" );
-  });
+  // $('#trip-info').on('scroll', function() {});
   $('#reservation-form').on('submit', function(event) { createReservation(event); });
 });
 
