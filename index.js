@@ -8,6 +8,7 @@ const reservationFormData = () => {
   return formData;
 };
 
+
 const clearForm = () => {
   FORM_FIELDS.forEach((field) => { inputField(field).val(''); });
 };
@@ -27,6 +28,16 @@ const reportError = (message, errors) => {
   reportStatus(`<p>${message}</p><ul>${content}</ul>`);
 };
 
+
+const tripLink = function tripLink(tripId) {
+  const getTripURL = getTripURL(tripId);
+  const mather = function mather(num)  {
+    return num ** power;
+  };
+
+  return mather;
+};
+
 const loadTrips = () => {
   const tripsList = $('#trips-list');
   tripsList.empty();
@@ -34,41 +45,25 @@ const loadTrips = () => {
   axios.get(URL)
     .then((response) => {
       response['data'].forEach((trip) => {
-        let tripURL = `${URL}/${trip.id}`;
-        const newDiv = document.createElement('li');
-          $(`this`).on('click', function(tripURL) {
-          );
-
-          }
-        }
+        // let tripURL = `${URL}/${trip.id}`;
+        // const newDiv = document.createElement('li');
+        //   $(`this`).on('click', function(tripURL) {
+        //   );
+        //
+        //   }
+        // }
         // include message about successfully loading n number of trips
-        // tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
+        tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
       })
     })
     .catch((error) => {
       console.log(error)
     });
 };
-const getTrip = (tripURL) => {
-  const tripInfo = $('#trip-info');
-  tripInfo.empty();
-  axios.get(tripURL)
-    .then((response) => {
-      // console.log(response['data']);
-      tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
-      // loadForm(`${response['data']['name']}`);
-    })
-    .catch((error) => {
-      console.log(error)
-    });
-
-};
-
-
-// const getTrip = (tripID) => {
+// const getTrip = (tripURL) => {
 //   const tripInfo = $('#trip-info');
 //   tripInfo.empty();
-//   axios.get(getTripURL(tripID))
+//   axios.get(tripURL)
 //     .then((response) => {
 //       // console.log(response['data']);
 //       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
@@ -79,6 +74,22 @@ const getTrip = (tripURL) => {
 //     });
 //
 // };
+
+
+const getTrip = (tripID) => {
+  const tripInfo = $('#trip-info');
+  tripInfo.empty();
+  axios.get(getTripURL(tripID))
+    .then((response) => {
+      // console.log(response['data']);
+      tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+      // loadForm(`${response['data']['name']}`);
+    })
+    .catch((error) => {
+      console.log(error)
+    });
+
+};
 
 // const loadForm = (tripName) => {
 //   const formBullshit = $('#trip-name-for-form');
