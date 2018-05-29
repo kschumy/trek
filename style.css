@@ -77,6 +77,7 @@ body {
 }
 
 #trips-list {
+  overflow: scroll;
   height: 35rem;
 }
 #book, #trip-info, #list, #trips-list, #whole-right-subside {
@@ -86,6 +87,10 @@ body {
 
 #book {
   padding-bottom: 0px;
+}
+
+.trip-info-field {
+  text-align: justify;
 }
 /*#list li {*/
   /*border: black solid;*/
