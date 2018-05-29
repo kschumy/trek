@@ -1,46 +1,21 @@
 const FORM_FIELDS = ['name', 'email'];
-const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
 let continents = new Set([
   'Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia'
 ]);
 
-const inputField = name => $(`#reservation-form input[name="${name}"]`);
-const getInput = name => { return inputField(name).val() || undefined };
 
-// Provided field must be a String. Returns HTML for a form field with name of provided field.
-let formInfo = function formInfo() {
-  function inputField(field, type) {
-    return `<label for=${field}>${field.toUpperCase()}</label>
-            <input type=${type} name=${field} id=${field} />`;
-  }
-    return {
-      formStart: function(sectionID, formName,formID) {
-        return `<section id=${sectionID}><h4>${formName}</h4><form id=${formID}>`;
-      },
-      formEnd: function(submitName, submitValue) {
-        return `<br /><input type="submit" name=${submitName} value=${submitValue} /></form></section>`;
-      },
-      stringField: function(field) {
-        return inputField(field, 'string');
-      },
-      selectField: function(selectionOptions) {
-        let selectionString = `<select>`;
-        selectionOptions.forEach((item) => {
-          selectionString += (`<option value=${item}>${item}</option>`)
-        });
-        selectionString += `</select>`;
-        return selectionString;
-      },
-      numberField: function(field) {
-        return inputField(field, 'integer');
-      }
-    }
-  };
-
+const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
+const getTripURL = (tripId) => { return `${URL}/${tripId}` };
+const getReservationURL = (tripId) => { return `${getTripURL(tripId)}/reservations` };
+const getQueryByLocationURL = (continent) => { return `${URL}/continent?query=${continent}/` };
 
 const formFieldHTMLString = field => {
   return `<label for=${field}>${field.toUpperCase()}</label><input type='string' name=${field} id=${field} />`;
 };
+
+
+const inputField = name => $(`#reservation-form input[name="${name}"]`);
+const getInput = name => { return inputField(name).val() || undefined };
 
 // Returns a Map of the reservation form data, which the keys as form field names and the values as
 // the
@@ -48,6 +23,10 @@ const reservationFormData = () => {
   const formData = {};
   FORM_FIELDS.forEach((field) => { formData[field] = getInput(field); });
   return formData;
+};
+
+// TODO: Complete after filter with budget
+const filterFormData = () => {
 };
 
 // Returns a String of HTML for the reservation form.
@@ -61,11 +40,6 @@ const loadForm = () => {
 // Sets all
 const clearForm = () => { FORM_FIELDS.forEach((field) => { inputField(field).val(''); }) };
 
-
-
-const getTripURL = (tripId) => { return `${URL}/${tripId}` };
-const getReservationURL = (tripId) => { return `${URL}/${tripId}/reservations` };
-
 const reportStatus = (message) => { $('#status-message').html(message); };
 
 const reportError = (message, errors) => {
@@ -76,11 +50,11 @@ const reportError = (message, errors) => {
   reportStatus(`<p>${message}</p><ul>${content}</ul>`);
 };
 
-
-const loadTrips = () => {
+const loadTrips = (query) => {
   const tripsList = $('#trips-list');
   tripsList.empty();
-  axios.get(URL)
+  loadTripURL = query === null ? URL : getQueryByLocationURL(query);
+  axios.get(loadTripURL)
     .then((response) => {
       response['data'].forEach((trip) => {
         continents.add(trip.continent); // updates continents list if new continent
@@ -106,25 +80,36 @@ const getTrip = (tripID) => {
 
 };
 
+const filterTrips = (event) => {
+  event.preventDefault();
+  console.log(event);
+  // let filterValue =
+
+};
+
+
+
+
 const loadFilter = () => {
-  const tripInfo = $('#right-side-info');
-  tripInfo.empty();
-
-  const formFoo = formInfo();
-  tripInfo.append(`${formFoo.formStart('whole-right-subside', 'Filter Trips', 'filter-trips-form')}`);
-  // $(`#whole-right-subside`).append(`${formFoo.stringField('foo')}`)
-  $(`#whole-right-subside`).append(`${formFoo.numberField('budget')}`)
-    .append(`${formFoo.selectField(continents)}`)
-    .append(`${formFoo.formEnd('filter-trips', 'Filter Trips')}`);
-
-  // $('.filter-trips').on('click', function(event) {
-  //   $('.side-info').slideUp('slow')
-  //     .promise().done(function() {
-  //     loadFilter();
-  //     $('.side-info').slideDown('slow');
-  //   });
-  // console.log(formFoo.stringField('foo'));
-  // tripInfo.append(`<section id="whole-right-subside">${formFoo.stringField('foo')}</section>`);
+  const formFilterInfo = $('#right-side-info');
+  formFilterInfo.empty();
+  // let fuckThis = `;
+  // fuckThis += ``;
+  // fuckThis += ``;
+  // // continents.forEach((continent) => {
+  // //   // console.log(contString);
+  // //   fuckThis += `<li class='${continent}'>${continent}</li>`;
+  // // });
+  // fuckThis += ``;
+  formFilterInfo.append(`<section id='book'><h4>Filter Trips</h4><ul><li class='continent asia'>Asia</li><li class='continent africa'>Africa</li></ul></section>`);
+  // let fuckThis = '';
+  // fuckThis += `<section id='whole-right-subside'><h4>Filter Trips</h4><form id='filter-trips-form'><select>`;
+  // continents.forEach((continent) => {
+  //   // console.log(contString);
+  //   fuckThis += `<option value='${continent}'>${continent}</option>`;
+  // });
+  // fuckThis += `</select><br /><input type='submit' name='filter-trips' value='Filter' /></form></section>`;
+  // formFilterInfo.append(fuckThis);
 };
 
 const createReservation = (event) => {
@@ -156,10 +141,10 @@ const createReservation = (event) => {
 $(document).ready(() => {
   $('.hidden-at-start').hide();
 
-  $('#load-trips-button').on('click', function(event) {
+  $('#load-trips-button').on('click', function() {
     $('#list').slideDown('slow');
       // .promise().done(function() {
-      loadTrips(event);
+      loadTrips(null);
     // });
   });
 
@@ -186,13 +171,17 @@ $(document).ready(() => {
     //     console.log(error)
     //   });
   });
-  $('#filter-trips-form').on('submit', function(event) {
-    $('#trips-list').slideUp('slow')
-      .promise().done(function() {
-      loadTrips(event);
-      //   getTrip(event.target.classList[1]);
-      // $('.side-info').slideDown('slow');
-    });
+  $('#book li .asia').on('click', function(event) {
+    console.log('foo');
+    // $('#trips-list').slideUp('slow')
+    //   .promise().done(function() {
+    $('#list').slideDown('slow');
+    // throw "fuck this";
+    filterTrips(event);
+        // console.log(${`#filter-trips-form`});
+      // loadTrips(select(name).val());
+      // $('#trips-list').slideDown('slow');
+    // });
 
   });
 
@@ -204,3 +193,54 @@ $(document).ready(() => {
 
 
 // $('#fuck-yeah-ampers-button').click(ampers);
+
+
+// const loadFilter = () => {
+//   const tripInfo = $('#right-side-info');
+//   tripInfo.empty();
+//
+//   const formFoo = formInfo();
+//   tripInfo.append(`${formFoo.formStart('whole-right-subside', 'Filter Trips', 'filter-trips-form')}`);
+//   // TODO: do not delete! Use for filter with budget
+//   // $(`#whole-right-subside`).append(`${formFoo.numberField('budget')}`)
+//   $(`#filter-trips-form`).append(`${formFoo.selectField(continents)}`)
+//     .append(`${formFoo.formEnd('filter-trips', 'Filter')}`);
+//
+//   // $('.filter-trips').on('click', function(event) {
+//   //   $('.side-info').slideUp('slow')
+//   //     .promise().done(function() {
+//   //     loadFilter();
+//   //     $('.side-info').slideDown('slow');
+//   //   });
+//   // console.log(formFoo.stringField('foo'));
+//   // tripInfo.append(`<section id="whole-right-subside">${formFoo.stringField('foo')}</section>`);
+// };
+
+// let formInfo = function formInfo() {
+//   function inputField(field, type) {
+//     return `<label for=${field}>${field.toUpperCase()}</label>
+//             <input type=${type} name=${field} id=${field} />`;
+//   }
+//   return {
+//     formStart: function(sectionID, formName,formID) {
+//       return `<section id=${sectionID}><h4>${formName}</h4><form id=${formID}>`;
+//     },
+//     formEnd: function(submitName, submitValue) {
+//       return `<br /><input type="submit" name=${submitName} value=${submitValue} /></form></section>`;
+//     },
+//     stringField: function(field) {
+//       return inputField(field, 'string');
+//     },
+//     selectField: function(selectionOptions) {
+//       let selectionString = `<select>`;
+//       selectionOptions.forEach((item) => {
+//         selectionString += (`<option value=${item}>${item}</option>`)
+//       });
+//       selectionString += `</select>`;
+//       return selectionString;
+//     },
+//     numberField: function(field) {
+//       return inputField(field, 'integer');
+//     }
+//   }
+// };
