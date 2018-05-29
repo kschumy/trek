@@ -29,30 +29,12 @@ const reportError = (message, errors) => {
 };
 
 
-const tripLink = function tripLink(tripId) {
-  const getTripURL = getTripURL(tripId);
-  const mather = function mather(num)  {
-    return num ** power;
-  };
-
-  return mather;
-};
-
 const loadTrips = () => {
   const tripsList = $('#trips-list');
   tripsList.empty();
-
   axios.get(URL)
     .then((response) => {
       response['data'].forEach((trip) => {
-        // let tripURL = `${URL}/${trip.id}`;
-        // const newDiv = document.createElement('li');
-        //   $(`this`).on('click', function(tripURL) {
-        //   );
-        //
-        //   }
-        // }
-        // include message about successfully loading n number of trips
         tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
       })
     })
@@ -60,30 +42,14 @@ const loadTrips = () => {
       console.log(error)
     });
 };
-// const getTrip = (tripURL) => {
-//   const tripInfo = $('#trip-info');
-//   tripInfo.empty();
-//   axios.get(tripURL)
-//     .then((response) => {
-//       // console.log(response['data']);
-//       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
-//       // loadForm(`${response['data']['name']}`);
-//     })
-//     .catch((error) => {
-//       console.log(error)
-//     });
-//
-// };
-
 
 const getTrip = (tripID) => {
-  const tripInfo = $('#trip-info');
+  const tripInfo = $('#right-side-info');
   tripInfo.empty();
   axios.get(getTripURL(tripID))
     .then((response) => {
-      // console.log(response['data']);
-      tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
-      // loadForm(`${response['data']['name']}`);
+      tripInfo.append(`<section id="trip-info"><h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p></section>`);
+      loadForm();
     })
     .catch((error) => {
       console.log(error)
@@ -91,11 +57,16 @@ const getTrip = (tripID) => {
 
 };
 
-// const loadForm = (tripName) => {
-//   const formBullshit = $('#trip-name-for-form');
-//   formBullshit.empty();
-//   $(formBullshit).append(tripName);
-// };
+const loadForm = () => {
+  $(`#right-side-info`).append(`
+    <section id="book">
+    <h4>Reserve Trip</h4>
+    <form id="reservation-form">
+      <label for="name">Name</label><input type="text" name="name" id="name" />
+      <label for="email">Email</label><input type="text" name="email" id="email" />
+    <input type="submit" name="add-pet" value="Add Reservation" /></form></section>
+  `);
+};
 
 const createReservation = (event) => {
   event.preventDefault();

@@ -27,8 +27,7 @@ body {
   /*grid-auto-rows: minmax(50px, 40rem);*/
   grid-template-areas:
           "nav nav"
-          "trip-list-header big-info"
-          "list big-info";
+          "list right-side-info";
   /*border-bottom: 6px solid red;*/
 }
 
@@ -38,10 +37,10 @@ body {
   grid-area: nav;
 }
 
-.trip-list-header {
-  grid-area: trip-list-header;
-  height: 3rem;
-}
+/*.trip-list-header {*/
+  /*grid-area: trip-list-header;*/
+  /*height: 3rem;*/
+/*}*/
 
 #list {
   max-height: 40rem;
@@ -53,12 +52,15 @@ body {
   /*border-spacing: 10px;*/
  }
 
-#big-info {
+/*#big-info {*/
+#right-side-info {
   height: 66vh;
-  grid-area: big-info;
+  grid-area: right-side-info;
   border-bottom-right-radius: 15px;
 }
 #trip-info {
+  overflow: scroll;
+  height: 50%;"
   /*height: 20rem;*/
   /*grid-area: info;*/
   /*background-color: white;*/
