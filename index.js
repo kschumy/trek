@@ -1,13 +1,27 @@
 const FORM_FIELDS = ['name', 'email'];
 const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
 let continents = new Set(['Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia']);
-// const CONTINENTS = ['Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia'];
-
 
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
 const getInput = name => { return inputField(name).val() || undefined };
 
 // Provided field must be a String. Returns HTML for a form field with name of provided field.
+let formInfo = function formInfo() {
+  function inputField(field, type) {
+    return `<label for=${field}>${field.toUpperCase()}</label><input type=${type} name=${field} id=${field} />`;
+  }
+    return {
+      stringField: function(field) {
+        console.log(`${field}`);
+        return inputField(field, 'string');
+      },
+      numberField: function(field) {
+        inputField(field, 'number');
+      }
+    }
+  };
+
+
 const formFieldHTMLString = field => {
   return `<label for=${field}>${field.toUpperCase()}</label><input type='string' name=${field} id=${field} />`;
 };
@@ -22,10 +36,10 @@ const reservationFormData = () => {
 
 // Returns a String of HTML for the reservation form.
 const loadForm = () => {
-  let form = `<section id='book'><h4>Reserve Trip</h4><form id='reservation-form'>`;
-  FORM_FIELDS.forEach((field) => { form += formFieldHTMLString(field) });
-  form += `<br /><input type="submit" name="add-reservation" value="Add Reservation" /></form></section>`;
-  return form;
+  let resFormString = `<section id='book'><h4>Reserve Trip</h4><form id='reservation-form'>`;
+  FORM_FIELDS.forEach((field) => { resFormString += formFieldHTMLString(field) });
+  resFormString += `<br /><input type="submit" name="add-reservation" value="Add Reservation" /></form></section>`;
+  return resFormString;
 };
 
 // Sets all
@@ -85,6 +99,14 @@ const getTrip = (tripID) => {
 
 };
 
+const loadFilter = () => {
+  const tripInfo = $('#right-side-info');
+  tripInfo.empty();
+  const formFoo = formInfo();
+  console.log(formFoo.stringField('foo'));
+  tripInfo.append(`<section id="whole-right-subside">${formFoo.stringField('foo')}</section>`);
+};
+
 const createReservation = (event) => {
   event.preventDefault();
   let reservationData = reservationFormData();
@@ -129,18 +151,21 @@ $(document).ready(() => {
         $('.side-info').slideDown('slow');
     });
   });
-  $('#filters').on('select', function(event) {
-    const tripsList = $('#trips-list');
-    tripsList.empty();
-    axios.get(URL + '/continent?query=Asia')
-      .then((response) => {
-        response['data'].forEach((trip) => {
-          tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+  $('#filter-trips-button').on('click', function(event) {
+    $('.side-info').slideUp('slow')
+      .promise().done(function() {
+      loadFilter();
+      $('.side-info').slideDown('slow');
+    });
+    // axios.get(URL + '/continent?query=Asia')
+    //   .then((response) => {
+    //     response['data'].forEach((trip) => {
+    //       tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
+    //     })
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   });
   });
 
   // $('#trip-info').on('scroll', function() {});
