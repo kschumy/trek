@@ -1,19 +1,35 @@
 const FORM_FIELDS = ['name', 'email'];
+const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
+
+
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
 const getInput = name => { return inputField(name).val() || undefined };
 
+// Provided field must be a String. Returns HTML for a form field with name of provided field.
+const formFieldHTMLString = field => {
+  return `<label for=${field}>${field.toUpperCase()}</label><input type='string' name=${field} id=${field} />`;
+};
+
+// Returns a Map of the reservation form data, which the keys as form field names and the values as
+// the
 const reservationFormData = () => {
   const formData = {};
   FORM_FIELDS.forEach((field) => { formData[field] = getInput(field); });
   return formData;
 };
 
-
-const clearForm = () => {
-  FORM_FIELDS.forEach((field) => { inputField(field).val(''); });
+// Returns a String of HTML for the reservation form.
+const loadForm = () => {
+  let form =  `<section id='book'><h4>Reserve Trip</h4><form id='reservation-form'>`;
+  FORM_FIELDS.forEach((field) => { form += formFieldHTMLString(field)});
+  form += `<br /><input type="submit" name="add-reservation" value="Add Reservation" /></form></section>`;
+  return form;
 };
 
-const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
+// Sets all
+const clearForm = () => { FORM_FIELDS.forEach((field) => { inputField(field).val(''); }) };
+
+
 
 const getTripURL = (tripId) => { return `${URL}/${tripId}` };
 const getReservationURL = (tripId) => { return `${URL}/${tripId}/reservations` };
@@ -49,23 +65,12 @@ const getTrip = (tripID) => {
   axios.get(getTripURL(tripID))
     .then((response) => {
       tripInfo.append(`<section id="trip-info"><h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p></section>`);
-      loadForm();
+      tripInfo.append(loadForm());
     })
     .catch((error) => {
       console.log(error)
     });
 
-};
-
-const loadForm = () => {
-  $(`#right-side-info`).append(`
-    <section id="book">
-    <h4>Reserve Trip</h4>
-    <form id="reservation-form">
-      <label for="name">Name</label><input type="text" name="name" id="name" />
-      <label for="email">Email</label><input type="text" name="email" id="email" />
-    <input type="submit" name="add-pet" value="Add Reservation" /></form></section>
-  `);
 };
 
 const createReservation = (event) => {
