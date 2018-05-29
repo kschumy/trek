@@ -83,11 +83,7 @@ const getTrip = (tripID) => {
 const filterTrips = (event) => {
   event.preventDefault();
   console.log(event);
-  // let filterValue =
-
 };
-
-
 
 
 const loadFilter = () => {
