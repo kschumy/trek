@@ -28,11 +28,9 @@ const reportError = (message, errors) => {
   reportStatus(`<p>${message}</p><ul>${content}</ul>`);
 };
 
-function foo(tripId) {
-  console.log(`${URL}/${tripId}`);
-  // const getTripURL = getTripURL(tripId);
-  let getTripURL = `${URL}/${tripId}`;
-  // console.log(`${getTripURL()}`);
+let foo = (function foo() {
+  const getTripURL = getTripURL(tripId);
+
   function getTrip() {
     const tripInfo = $('#trip-info');
     tripInfo.empty();
@@ -43,41 +41,83 @@ function foo(tripId) {
       .catch((error) => {
         console.log(error)
       });
-    // console.log( something );
+    console.log( something );
   }
+  //
+  // function doAnother() {
+  //   console.log( another.join( " ! " ) );
+  // }
+
   return {
-    getTrip: getTrip
+    getTrip: getTrip,
+    // doAnother: doAnother
   }
-};
+})();
+
+// foo.doSomething(); // cool
+// foo.doAnother(); // 1 ! 2 ! 3
+
 
 const loadTrips = () => {
-  console.log("foo");
   const tripsList = $('#trips-list');
   tripsList.empty();
-  // console.log(axios.get(URL));
+
   axios.get(URL)
     .then((response) => {
-      console.log(`${response}`);
       response['data'].forEach((trip) => {
-        console.log(`${trip.name}`);
-        let newFunction = foo(trip.id);
-        const bar = () => $(`<li class='trip'>${trip.name}`).on('click', function () {
+        // $(`this`).on('click', function(tripURL) {
+        let newFunction = foo(tripURL);
+        $(`<li class='trip'>${newFunction}</li>`).on('click', function () {
           newFunction.getTrip();
         });
-        tripsList.append(bar);
+        // const newDiv = document.createElement('li');
+        //   $(`this`).on('click', function(tripURL) {
 
-
-        tripsList.append(`</li>`);
-        })
-
+        // let tripURL = `${URL}/${trip.id}`;
+        // const newDiv = document.createElement('li');
+        //   $(`this`).on('click', function(tripURL) {
+        //   );
+        //
+        //   }
+        // }
+        // include message about successfully loading n number of trips
         // tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
-      // })
+        // })
+      })
     })
-  .catch((error) => {
-    console.log(error)
-  });
+    .catch((error) => {
+      console.log(error)
+    });
 };
+// const getTrip = (tripURL) => {
+//   const tripInfo = $('#trip-info');
+//   tripInfo.empty();
+//   axios.get(tripURL)
+//     .then((response) => {
+//       // console.log(response['data']);
+//       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+//       // loadForm(`${response['data']['name']}`);
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     });
+//
+// };
 
+// const getTrip = (tripID) => {
+//   const tripInfo = $('#trip-info');
+//   tripInfo.empty();
+//   axios.get(getTripURL(tripID))
+//     .then((response) => {
+//       // console.log(response['data']);
+//       tripInfo.append(`<h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p>`);
+//       // loadForm(`${response['data']['name']}`);
+//     })
+//     .catch((error) => {
+//       console.log(error)
+//     });
+//
+// };
 
 
 const createReservation = (event) => {
@@ -112,18 +152,18 @@ $(document).ready(() => {
 
   $('#load-trips-button').on('click', function(event) {
     $('#list').slideDown('slow');
-      // .promise().done(function() {
-      loadTrips(event);
+    // .promise().done(function() {
+    loadTrips(event);
     // });
   });
-  //
-  // $('#trips-list').on('click', function(event) {
-  //   $('.side-info').slideUp('slow')
-  //     .promise().done(function() {
-  //       getTrip(event.target.classList[1]);
-  //       $('.side-info').slideDown('slow');
-  //   });
-  // });
+
+  $('#trips-list').on('click', function(event) {
+    $('.side-info').slideUp('slow')
+      .promise().done(function() {
+      getTrip(event.target.classList[1]);
+      $('.side-info').slideDown('slow');
+    });
+  });
 
   // $('#trip-info').on('scroll', function() {});
   $('#reservation-form').on('submit', function(event) { createReservation(event); });
