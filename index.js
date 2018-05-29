@@ -1,5 +1,7 @@
 const FORM_FIELDS = ['name', 'email'];
 const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
+let continents = new Set(['Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia']);
+// const CONTINENTS = ['Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia'];
 
 
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
@@ -20,8 +22,8 @@ const reservationFormData = () => {
 
 // Returns a String of HTML for the reservation form.
 const loadForm = () => {
-  let form =  `<section id='book'><h4>Reserve Trip</h4><form id='reservation-form'>`;
-  FORM_FIELDS.forEach((field) => { form += formFieldHTMLString(field)});
+  let form = `<section id='book'><h4>Reserve Trip</h4><form id='reservation-form'>`;
+  FORM_FIELDS.forEach((field) => { form += formFieldHTMLString(field) });
   form += `<br /><input type="submit" name="add-reservation" value="Add Reservation" /></form></section>`;
   return form;
 };
@@ -51,8 +53,18 @@ const loadTrips = () => {
   axios.get(URL)
     .then((response) => {
       response['data'].forEach((trip) => {
+        continents.add(trip.continent); // updates continents list if new continent
         tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
-      })
+      });
+
+      // for (let entry of continents) {
+      //   console.log(entry);
+      //   // expected output: [42, 42]
+      //   // expected output: ["forty two", "forty two"]
+      // }
+    continents.forEach((continent) => {
+     $('#filers').append(`<option value="${continent}">${continent}</option>`)
+    });
     })
     .catch((error) => {
       console.log(error)
@@ -116,6 +128,19 @@ $(document).ready(() => {
         getTrip(event.target.classList[1]);
         $('.side-info').slideDown('slow');
     });
+  });
+  $('#filters').on('select', function(event) {
+    const tripsList = $('#trips-list');
+    tripsList.empty();
+    axios.get(URL + '/continent?query=Asia')
+      .then((response) => {
+        response['data'].forEach((trip) => {
+          tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      });
   });
 
   // $('#trip-info').on('scroll', function() {});
