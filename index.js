@@ -1,6 +1,8 @@
 const FORM_FIELDS = ['name', 'email'];
 const URL = 'https://ada-backtrek-api.herokuapp.com/trips';
-let continents = new Set(['Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia']);
+let continents = new Set([
+  'Antartica', 'Asia', 'Europe', 'North America', 'South America', 'Africa', 'Australasia'
+]);
 
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
 const getInput = name => { return inputField(name).val() || undefined };
@@ -8,15 +10,29 @@ const getInput = name => { return inputField(name).val() || undefined };
 // Provided field must be a String. Returns HTML for a form field with name of provided field.
 let formInfo = function formInfo() {
   function inputField(field, type) {
-    return `<label for=${field}>${field.toUpperCase()}</label><input type=${type} name=${field} id=${field} />`;
+    return `<label for=${field}>${field.toUpperCase()}</label>
+            <input type=${type} name=${field} id=${field} />`;
   }
     return {
+      formStart: function(sectionID, formName,formID) {
+        return `<section id=${sectionID}><h4>${formName}</h4><form id=${formID}>`;
+      },
+      formEnd: function(submitName, submitValue) {
+        return `<br /><input type="submit" name=${submitName} value=${submitValue} /></form></section>`;
+      },
       stringField: function(field) {
-        console.log(`${field}`);
         return inputField(field, 'string');
       },
+      selectField: function(selectionOptions) {
+        let selectionString = `<select>`;
+        selectionOptions.forEach((item) => {
+          selectionString += (`<option value=${item}>${item}</option>`)
+        });
+        selectionString += `</select>`;
+        return selectionString;
+      },
       numberField: function(field) {
-        inputField(field, 'number');
+        return inputField(field, 'integer');
       }
     }
   };
@@ -70,15 +86,6 @@ const loadTrips = () => {
         continents.add(trip.continent); // updates continents list if new continent
         tripsList.append(`<li class="trip ${trip.id}">${trip.name}</li>`)
       });
-
-      // for (let entry of continents) {
-      //   console.log(entry);
-      //   // expected output: [42, 42]
-      //   // expected output: ["forty two", "forty two"]
-      // }
-    continents.forEach((continent) => {
-     $('#filers').append(`<option value="${continent}">${continent}</option>`)
-    });
     })
     .catch((error) => {
       console.log(error)
@@ -102,15 +109,27 @@ const getTrip = (tripID) => {
 const loadFilter = () => {
   const tripInfo = $('#right-side-info');
   tripInfo.empty();
+
   const formFoo = formInfo();
-  console.log(formFoo.stringField('foo'));
-  tripInfo.append(`<section id="whole-right-subside">${formFoo.stringField('foo')}</section>`);
+  tripInfo.append(`${formFoo.formStart('whole-right-subside', 'Filter Trips', 'filter-trips-form')}`);
+  // $(`#whole-right-subside`).append(`${formFoo.stringField('foo')}`)
+  $(`#whole-right-subside`).append(`${formFoo.numberField('budget')}`)
+    .append(`${formFoo.selectField(continents)}`)
+    .append(`${formFoo.formEnd('filter-trips', 'Filter Trips')}`);
+
+  // $('.filter-trips').on('click', function(event) {
+  //   $('.side-info').slideUp('slow')
+  //     .promise().done(function() {
+  //     loadFilter();
+  //     $('.side-info').slideDown('slow');
+  //   });
+  // console.log(formFoo.stringField('foo'));
+  // tripInfo.append(`<section id="whole-right-subside">${formFoo.stringField('foo')}</section>`);
 };
 
 const createReservation = (event) => {
   event.preventDefault();
   let reservationData = reservationFormData();
-  // console.log(`#trip-info h3`);
   const reservationURL = getReservationURL($('#trip-info h3')['0'].classList[0]);
 
   axios.post(reservationURL, reservationData)
@@ -166,6 +185,15 @@ $(document).ready(() => {
     //   .catch((error) => {
     //     console.log(error)
     //   });
+  });
+  $('#filter-trips-form').on('submit', function(event) {
+    $('#trips-list').slideUp('slow')
+      .promise().done(function() {
+      loadTrips(event);
+      //   getTrip(event.target.classList[1]);
+      // $('.side-info').slideDown('slow');
+    });
+
   });
 
   // $('#trip-info').on('scroll', function() {});
