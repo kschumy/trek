@@ -54,12 +54,13 @@ const clearForm = () => { FORM_FIELDS.forEach((field) => { inputField(field).val
 // Error/message reporting  ////////////////////////////////////////////////////////////////////////
 const reportStatus = (message) => { $('#status-message').html(message); };
 
+
 const reportError = (message, errors) => {
   let content = '';
-  errors.forEach((errorField) => {
-    errorField.forEach((errorDetails) => { content += `<li>${errorField}: ${errorDetails}</li>`; });
-  });
-  reportStatus(`<p>${message}</p><ul>${content}</ul>`);
+  for (const field in errors) {
+    for (const problem of errors[field]) { content += `${field}: ${problem}. `; }
+  }
+  reportStatus(`<p>${message} ${content}</p>`);
 };
 
 // Get all trips  //////////////////////////////////////////////////////////////////////////////////
@@ -99,15 +100,13 @@ const createReservation = (event, tripID) => {
   axios.post(getReservationURL(tripID), reservationFormData())
     .then((response) => {
       reportStatus(`Successfully added a reservation with ID ${response.data.trip_id}!`);
-      $('#status-message').addClass('green');
       clearForm();
-      // $('#status-message').toggleClass('green');
     })
     .catch((error) => {
       console.log(error.response);
       if (error.response.data && error.response.data.errors) {
         console.log(error.response.data.errors);
-        reportError(`Oh no!: ${error.message}`, error.response.data.errors);
+        reportError(`Oh no! `, error.response.data.errors);
       } else {
         reportStatus(`Encountered an error: ${error.message}`);
       }
