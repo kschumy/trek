@@ -41,7 +41,6 @@ body {
   grid-area: nav;
 }
 
-
 #list {
   height: 45rem;
   border-bottom-left-radius: 15px;
@@ -59,20 +58,15 @@ body {
           "trip-info"
           "book";
 }
+
 #trip-info {
-
   overflow: scroll;
-
-
-  /*height: 20rem;*/
   grid-area: trip-info;
-  /*background-color: white;*/
 }
 
 #book {
   height: 100%;
   grid-area: book;
-  /*background-color: white;*/
   border-bottom-right-radius: 15px;
   border-bottom: 6px solid red;
 }
@@ -81,19 +75,16 @@ body {
   overflow: scroll;
   max-height: 38rem;
 }
+
 #book, #trip-info, #list, #trips-list, #whole-right-subside {
   background-color: white;
   padding: 5px;
 }
 
-/*#book {*/
-  /*padding-bottom: 0px;*/
-/*}*/
-
-.trip-info-field {
+.info-field {
   text-align: justify;
 }
-/*#list li {*/
-  /*border: black solid;*/
-/*}*/
 
+.green {
+  background-color: green;
+}
