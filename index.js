@@ -10,14 +10,15 @@ const getReservationURL = (tripId) => { return `${getTripURL(tripId)}/reservatio
 const getQueryByLocationURL = (continent) => { return `${URL}/continent?query=${continent}/` };
 
 const formFieldHTMLString = field => {
-  return `<label for=${field}>${field.toUpperCase()}</label><input type='string' name=${field} id=${field} />`;
+  return `<label for=${field}>${field}</label>
+          <input type='string' name=${field} id=${field} />`;
 };
 
 const inputField = name => $(`#reservation-form input[name="${name}"]`);
 const getInput = name => { return inputField(name).val() || undefined };
 
 // Returns a Map of the reservation form data, which the keys as form field names and the values as
-// the
+// the user-provided input to the reservation form.
 const reservationFormData = () => {
   const formData = {};
   FORM_FIELDS.forEach((field) => { formData[field] = getInput(field); });
@@ -67,16 +68,18 @@ const getTrip = (tripID) => {
   tripInfo.empty();
   axios.get(getTripURL(tripID))
     .then((response) => {
-      // tripInfo.append(`<section id="trip-info"><h3 class='${tripID}'>${response['data']['name']}</h3><p>${response['data']['about']}</p><p>${response['data']['category']}</p></section>`);
       tripInfo.append(selectedTripInfo(response['data']));
       tripInfo.append(loadForm());
+      $('#reservation-form').submit(function(event) {
+        createReservation(event, tripID);
+      });
     })
     .catch((error) => {
       console.log(error)
     });
 };
 
-const selectedTripInfo = (data) => {
+const selectedTripInfo = (data, tripID) => {
   console.log(data);
   let returnString = `<section id='trip-info'><h3>${data['name']}</h3>`;
   INFO_FIELD.forEach((infoField) => {
@@ -87,10 +90,11 @@ const selectedTripInfo = (data) => {
 };
 
 
-const createReservation = (event) => {
+const createReservation = (event, tripID) => {
   event.preventDefault();
+  console.log(event);
   let reservationData = reservationFormData();
-  const reservationURL = getReservationURL($('#trip-info h3')['0'].classList[0]);
+  const reservationURL = getReservationURL(tripID);
 
   axios.post(reservationURL, reservationData)
     .then((response) => {
@@ -116,18 +120,20 @@ const createReservation = (event) => {
 $(document).ready(() => {
   $('.hidden-at-start').hide();
 
+
   $('#load-trips-button').on('click', function() {
     $('#list').slideDown('slow');
       loadTrips(null);
   });
 
-  $('#trips-list').on('click', function(event) {
+  $('#trips-list').on('click', function(eventTwo) {
     $('.side-info').slideUp('slow')
       .promise().done(function() {
-        getTrip(event.target.classList[1]);
+        getTrip(eventTwo.target.classList[1]);
         $('.side-info').slideDown('slow');
     });
   });
 
-  $('#reservation-form').on('submit', function(event) { createReservation(event); });
+
+
 });
